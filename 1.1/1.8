@@ -1,0 +1,52 @@
+#lang sicp
+
+(define (square x) (* x x))
+
+(define (pow base exp)
+  ;fast exponentiation
+  (cond
+    ((= exp 0) 1)
+    ((even? exp) (pow (square base) (/ exp 2)))
+    (else (* base (pow base (- exp 1))))))
+ 
+"pow tests"
+(= (pow 2 5) 32)
+(= (pow 2 4) 16)
+(= (pow 32 2) 1024)
+"pow tests done"
+
+(define root-error-tolerance 0.001)
+(define max-iter-count 500)
+
+;use newton's method
+;not what the exercise calls for, but I already know it...
+(define (root base n)
+  (define (good-enough guess)
+    (<
+     (abs (- (pow guess n) base))
+     root-error-tolerance))
+
+  (define (improve guess)
+    (= base 1)
+    guess
+    (* (/ 1 n)
+       (+
+        (* (- n 1) guess)
+        (/ base
+           (pow guess (- n 1))))))
+  
+  (define (root-iter guess count)
+    (cond
+      ((good-enough guess) guess)
+      ((> count max-iter-count) guess)
+      (else (root-iter (improve guess) (+ count 1)))))
+
+  (root-iter base 0))
+
+
+;tests, slow
+"root tests"
+(< (abs (- (pow (root 2 2) 2) 2)) root-error-tolerance)
+(< (abs (- (pow (root 4 5) 5) 4)) root-error-tolerance)
+(< (abs (- (pow (root -9 3) 3) -9)) root-error-tolerance)
+"root tests done"
