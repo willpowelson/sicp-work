@@ -1,0 +1,16 @@
+#lang sicp
+(define (pascals-triangle row col)
+  (cond
+    ((<= col 0) 1)
+    ((>= col row) 1)
+    ((+
+      (pascals-triangle (- row 1) (- col 1))
+      (pascals-triangle (- row 1) col)))))
+
+"tests"
+(= (pascals-triangle 0 0) 1)
+(= (pascals-triangle 2 1) 2)
+(= (pascals-triangle 3 1) )
+(= (pascals-triangle 3 2) 3)
+(= (pascals-triangle 4 1) 4)
+(= (pascals-triangle 4 2) 6)
