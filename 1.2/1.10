@@ -1,0 +1,51 @@
+#lang sicp
+(define (A x y)
+  (cond ((= y 0) 0)
+        ((= x 0) (* 2 y))
+        ((= y 1) 2)
+        (else (A (- x 1)
+                 (A x (- y 1))))))
+
+(A 1 10)
+(A 2 4)
+(A 3 3)
+
+(define (f n) (A 0 n))
+(define (f-concise n) (* 2 n))
+
+; a_{0} = 0
+; a_n = 2 ^ n
+(define (g n) (A 1 n))
+(define (g-concise n)
+  (cond
+    ((= n 0) 0)
+    (else (expt 2 n))))
+
+; a_{0} = 0
+; a_{1} = 2
+; a_{2} = 4
+; a_{n} = a_{n-1} ^ a_{n-2}
+(define (h n) (A 2 n))
+(define (h-concise n)
+  (define (recursive-expt p1 p2 count)
+    (cond
+      ((= count n) p2)
+      (else (recursive-expt p2 (expt p2 p1) (+ count 1)))))
+
+  (cond
+    ((= n 0) 0)
+    (else (recursive-expt 2 2 1))))
+
+(define (test f1 f2 n) (= (f1 n) (f2 n)))
+"test f"
+(test f f-concise 0)
+(test f f-concise 1)
+(test f f-concise 4)
+"test g"
+(test g g-concise 0)
+(test g g-concise 1)
+(test g g-concise 4)
+"test h"
+(test h h-concise 0)
+(test h h-concise 1)
+(test h h-concise 4)
